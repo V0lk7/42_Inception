@@ -1,7 +1,8 @@
 FROM alpine:3.17
 
-COPY --chmod=777 tools/configure.sh /
+COPY --chmod=655 tools/configure.sh /
+COPY --chmod=344 conf/nginx.conf /
 
-RUN ./configure.sh
+EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["sh","configure.sh"]
