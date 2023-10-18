@@ -1,8 +1,8 @@
 #!/bin/sh
 
-apk update && apk upgrade
-apk add nginx
-apk add openssl
+#apk update && apk upgrade
+#apk add nginx
+#apk add openssl
 
 ###############################################################################
 #Setting up nginx environment
