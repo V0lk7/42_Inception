@@ -2,10 +2,12 @@
 build:
 	docker build -t mariadb .
 rund:
-	docker run -d -p 443:443 mariadb
+	docker run -d -p 3306:3306 mariadb
 runit:
-	docker run -p 443:443 -it mariadb sh
+	docker run -p 3306:3306 -it mariadb sh
 kill:
 	docker kill $(shell docker ps -aq)
-erase:
+erased:
 	docker rm $(shell docker ps -aq)
+erasei:
+	docker rmi $(shell docker images -aq)
