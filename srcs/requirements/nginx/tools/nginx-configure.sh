@@ -17,10 +17,10 @@ adduser -D -g "" "$USER_NGINX"
 chown -R www:www /var/lib/nginx
 chown -R www:www /var/www
 
-mkdir -p /etc/nginx/ssl
-
 ###############################################################################
 #Generating SSL certificate and key
+#
+mkdir -p /etc/nginx/ssl
 
 openssl req -x509 -nodes -out /etc/nginx/ssl/jduval.42.fr.crt \
 	-keyout /etc/nginx/ssl/jduval.42.fr.key \

@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  nginx:
+   build: requirements/nginx
+   ports:
+     - "443:443"
+   restart: on-failure
+
+  mariadb:
+    build: requirements/mariadb
+    ports:
+      - "3306:3306"
+    restart: on-failure
+    volumes:
+      - mariadb:/var/lib/mysql
+
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/home/jduval/data/wordpress"
+      o: bind
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/home/jduval/data/mariadb"
+      o: bind
