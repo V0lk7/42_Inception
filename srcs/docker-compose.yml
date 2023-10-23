@@ -2,16 +2,22 @@ version: '2'
 
 services:
   nginx:
-   build: requirements/nginx
-   ports:
-     - "443:443"
-   restart: on-failure
+    build: requirements/nginx
+    ports:
+      - "443:443"
+    restart: on-failure
+    environment:
+      - USER_NGINX=www
+      - DOMAIN_NAME=jduval.42.fr
+      - CERT_SSL=jduval.42.fr.crt
+      - KEY_SSL=jduval.42.fr.key
 
   mariadb:
     build: requirements/mariadb
     ports:
       - "3306:3306"
     restart: on-failure
+    env_file: .env 
     volumes:
       - mariadb:/var/lib/mysql
 

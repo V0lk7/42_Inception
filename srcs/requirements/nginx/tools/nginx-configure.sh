@@ -4,7 +4,6 @@
 #Setting up nginx environment
 
 NGINX_CONF=/etc/nginx/nginx.conf
-USER_NGINX=www
 
 if [ -f "$NGINX_CONF" ]; then
 	rm -rf "$NGINX_CONF"
@@ -22,8 +21,8 @@ chown -R www:www /var/www
 #
 mkdir -p /etc/nginx/ssl
 
-openssl req -x509 -nodes -out /etc/nginx/ssl/jduval.42.fr.crt \
-	-keyout /etc/nginx/ssl/jduval.42.fr.key \
+openssl req -x509 -nodes -out /etc/nginx/ssl/"$CERT_SSL" \
+	-keyout /etc/nginx/ssl/"$KEY_SSL" \
 	-subj "/C=FR/ST=Nouvelle-Aquitaine/L=Angouleme/O=42/OU=42/CN=jduval.42.fr"
 
 ###############################################################################

@@ -11,4 +11,4 @@ RUN	apk update && apk upgrade; \
 
 EXPOSE 3306
 
-CMD ["mysqld_safe","--port=3306"]
+#CMD ["mysqld_safe","--port=3306"]
