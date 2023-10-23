@@ -12,24 +12,27 @@ COMPOSE_FILE=./srcs/docker-compose.yml
 
 all: run
 
-run: 
+envfile:
+	cp ~/.env ./srcs/
+
+run: envfile 
 	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@sudo mkdir -p /home/jduval/data/wordpress
-	@sudo mkdir -p /home/jduval/data/mariadb
+	@mkdir -p /home/jduval/data/wordpress
+	@mkdir -p /home/jduval/data/mariadb
 	@echo "$(GREEN)Building containers ... $(RESET)"
 	@docker compose -f $(COMPOSE_FILE) up --build
 
-up:
+up: envfile
 	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@sudo mkdir -p /home/jduval/data/wordpress
-	@sudo mkdir -p /home/jduval/data/mariadb
+	@mkdir -p /home/jduval/data/wordpress
+	@mkdir -p /home/jduval/data/mariadb
 	@echo "$(GREEN)Building containers in background ... $(RESET)"
 	@docker compose -f $(COMPOSE_FILE) up -d --build
 
-debug:
+debug: envfile
 	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@sudo mkdir -p /home/jduval/data/wordpress
-	@sudo mkdir -p /home/jduval/data/mariadb
+	@mkdir -p /home/jduval/data/wordpress
+	@mkdir -p /home/jduval/data/mariadb
 	@echo "$(GREEN)Building containers with log information ... $(RESET)"
 	@docker compose -f $(COMPOSE_FILE) --verbose up
 
@@ -40,21 +43,33 @@ list:
 list_volumes:
 	@echo "$(PURPLE)Listing volumes ... $(RESET)"
 	docker volume ls
-
-clean: 	
+stop:
+	@echo "$(RED)Stopping containers ... $(RESET)"
+	@-docker compose -f $(COMPOSE_FILE) stop
+start:
+	@echo "$(RED)Starting containers ... $(RESET)"
+	@-docker compose -f $(COMPOSE_FILE) start
+erase:
 	@echo "$(RED)Stopping containers ... $(RESET)"
 	@docker compose -f $(COMPOSE_FILE) down
-	@-docker stop `docker ps -qa`
-	@-docker rm `docker ps -qa`
 	@echo "$(RED)Deleting all images ... $(RESET)"
 	@-docker rmi -f `docker images -qa`
 	@echo "$(RED)Deleting all volumes ... $(RESET)"
 	@-docker volume rm `docker volume ls -q`
-	@echo "$(RED)Deleting all network ... $(RESET)"
-	@-docker network rm `docker network ls -q`
+
+clean: 	
+	@echo "$(RED)Stopping containers ... $(RESET)"
+	@docker compose -f $(COMPOSE_FILE) down
+#	@-docker stop `docker ps -qa`
+#	@-docker rm `docker ps -qa`
+	@echo "$(RED)Deleting all images ... $(RESET)"
+	@-docker rmi -f `docker images -qa`
+	@echo "$(RED)Deleting all volumes ... $(RESET)"
+	@-docker volume rm `docker volume ls -q`
 	@echo "$(RED)Deleting all data ... $(RESET)"
 	@sudo rm -rf /home/jduval/data/wordpress
 	@sudo rm -rf /home/jduval/data/mariadb
+	@rm -rf srcs/.env
 	@echo "$(RED)Deleting all $(RESET)"
 
-.PHONY: run up debug list list_volumes clean
+.PHONY: envfile run up debug list list_volumes clean
