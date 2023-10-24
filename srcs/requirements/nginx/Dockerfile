@@ -1,7 +1,7 @@
 FROM alpine:3.17
 
 RUN	apk update && apk upgrade; \
-	apk add nginx openssl; \
+	apk add nginx openssl fcgi; \
 	mkdir -p /wordpress
 
 COPY --chmod=655 tools/nginx-configure.sh /

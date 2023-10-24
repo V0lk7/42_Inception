@@ -2,24 +2,43 @@ version: '2'
 
 services:
   nginx:
+    container_name: nginx
     build: requirements/nginx
     ports:
     - "443:443"
+    networks:
+      - mynetwork
     restart: on-failure
     environment:
-    - USER_NGINX=www
-    - DOMAIN_NAME=jduval.42.fr
-    - CERT_SSL=jduval.42.fr.crt
-    - KEY_SSL=jduval.42.fr.key
+      - USER_NGINX=www
+      - DOMAIN_NAME=jduval.42.fr
+      - CERT_SSL=jduval.42.fr.crt
+      - KEY_SSL=jduval.42.fr.key
+    volumes:
+      - wordpress:/var/lib/nginx/html
 
   mariadb:
+    container_name: mariadb
     build: requirements/mariadb
-    ports:
-      - "3306:3306"
     restart: on-failure
     env_file: .env 
+    networks:
+      - mynetwork
     volumes:
       - mariadb:/var/lib/mysql
+
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+      - nginx
+    build: requirements/wordpress
+    restart: on-failure
+    env_file: .env
+    networks:
+      - mynetwork
+    volumes:
+      - wordpress:/wordpress
 
 volumes:
   wordpress:
@@ -34,3 +53,6 @@ volumes:
       type: none
       device: "/home/jduval/data/mariadb"
       o: bind
+
+networks:
+  mynetwork:

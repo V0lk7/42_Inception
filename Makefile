@@ -29,12 +29,10 @@ up: envfile
 	@echo "$(GREEN)Building containers in background ... $(RESET)"
 	@docker compose -f $(COMPOSE_FILE) up -d --build
 
-debug: envfile
-	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@mkdir -p /home/jduval/data/wordpress
-	@mkdir -p /home/jduval/data/mariadb
-	@echo "$(GREEN)Building containers with log information ... $(RESET)"
-	@docker compose -f $(COMPOSE_FILE) --verbose up
+log:
+	docker logs nginx
+	docker logs mariadb
+	docker logs wordpress
 
 list:	
 	@echo "$(PURPLE)Listing all containers ... $(RESET)"
@@ -45,7 +43,7 @@ list_volumes:
 	docker volume ls
 stop:
 	@echo "$(RED)Stopping containers ... $(RESET)"
-	@-docker compose -f $(COMPOSE_FILE) stop
+	@-docker compose -f $(COMPOSE_FILE) kill
 start:
 	@echo "$(RED)Starting containers ... $(RESET)"
 	@-docker compose -f $(COMPOSE_FILE) start
