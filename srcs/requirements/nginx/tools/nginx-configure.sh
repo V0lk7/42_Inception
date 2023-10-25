@@ -11,9 +11,8 @@ fi
 
 mv nginx.conf /etc/nginx/
 
-adduser -D -g "" "$USER_NGINX"
+adduser -D -g "" "www"
 
-chown -R www:www /var/lib/nginx
 chown -R www:www /var/www
 
 ###############################################################################

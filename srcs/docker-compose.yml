@@ -15,7 +15,7 @@ services:
       - CERT_SSL=jduval.42.fr.crt
       - KEY_SSL=jduval.42.fr.key
     volumes:
-      - wordpress:/var/lib/nginx/html
+      - wordpress:/var/www
 
   mariadb:
     container_name: mariadb
@@ -31,7 +31,6 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
-      - nginx
     build: requirements/wordpress
     restart: on-failure
     env_file: .env
