@@ -2,8 +2,10 @@
 
 cd wordpress/
 
-adduser -S "www"
-addgroup -S "www"
+adduser -S "nginx"
+addgroup -S "nginx"
+
+sleep 5
 
 wp core download
 wp config create --dbname="$DATABASE_NAME" \
@@ -19,23 +21,10 @@ wp core install --url="$URL" \
 		--admin_email="jduval@student.42angouleme.fr" \
 		--skip-email
 
-chown -R www:www /wordpress
+#chown -R nginx:nginx /wordpress
 
 rm -rf /etc/php81/php-fpm.d/www.conf
 
-cat << EOF > /etc/php81/php-fpm.d/www.conf
-	[Aled]
-
-	user = www
-	group = www
-
-	listen = 9000
-
-	pm = dynamic
-	pm.max_children = 10
-	pm.start_servers = 3
-	pm.min_spare_servers = 2
-	pm.max_spare_servers = 5
-EOF
+mv /www.conf /etc/php81/php-fpm.d/
 
 php-fpm81 -FOR

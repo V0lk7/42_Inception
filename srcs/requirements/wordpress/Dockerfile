@@ -1,6 +1,7 @@
 FROM alpine:3.17
 
 COPY	--chmod=655 tools/configure.sh /
+COPY	--chmod=655 conf/www.conf /
 
 RUN	apk update && apk upgrade; \
 	apk add php php-phar php-curl php-mysqli php-fpm php-mbstring; \

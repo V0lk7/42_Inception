@@ -29,8 +29,6 @@ services:
 
   wordpress:
     container_name: wordpress
-    depends_on:
-      - mariadb
     build: requirements/wordpress
     restart: on-failure
     env_file: .env

@@ -3,17 +3,12 @@
 ###############################################################################
 #Setting up nginx environment
 
-NGINX_CONF=/etc/nginx/nginx.conf
-
-if [ -f "$NGINX_CONF" ]; then
-	rm -rf "$NGINX_CONF"
-fi
-
 mv nginx.conf /etc/nginx/
 
-adduser -D -g "" "www"
+#adduser -S nginx
+#addgroup -S nginx
 
-chown -R www:www /var/www
+#chown -R nginx:nginx /var/www
 
 ###############################################################################
 #Generating SSL certificate and key
