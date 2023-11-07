@@ -21,7 +21,8 @@ wp core install --url="$URL" \
 		--admin_email="jduval@student.42angouleme.fr" \
 		--skip-email
 
-#chown -R nginx:nginx /wordpress
+chown -R nginx:nginx /wordpress
+chmod -R 777 /wordpress
 
 rm -rf /etc/php81/php-fpm.d/www.conf
 

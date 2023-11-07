@@ -5,11 +5,6 @@
 
 mv nginx.conf /etc/nginx/
 
-#adduser -S nginx
-#addgroup -S nginx
-
-#chown -R nginx:nginx /var/www
-
 ###############################################################################
 #Generating SSL certificate and key
 #
