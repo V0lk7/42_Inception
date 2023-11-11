@@ -1,11 +1,8 @@
 #!bin/sh
 
-cd wordpress/
-
-adduser -S "nginx"
-addgroup -S "nginx"
-
 sleep 5
+
+cd var/www
 
 wp core download
 wp config create --dbname="$DATABASE_NAME" \
@@ -21,11 +18,4 @@ wp core install --url="$URL" \
 		--admin_email="jduval@student.42angouleme.fr" \
 		--skip-email
 
-chown -R nginx:nginx /wordpress
-chmod -R 777 /wordpress
-
-rm -rf /etc/php81/php-fpm.d/www.conf
-
-mv /www.conf /etc/php81/php-fpm.d/
-
-php-fpm81 -FOR
+php-fpm81 -FR

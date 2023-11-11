@@ -12,11 +12,10 @@ if [ -d "/var/lib/mysql/mysql" ]; then
 	echo "/var/lib/mysqld already exist. Skipping creation."
 	chown -R mysql:mysql /var/lib/mysql
 else
-	echo "/var/lib/mysqld not found. Creating initial database."
 	chown mysql:mysql /var/lib/mysql
 	sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/my.cnf.d/mariadb-server.cnf
 	sed -i "s|.*skip-networking.*|skip-networking=OFF\nskip-grant-tables=0|g" /etc/my.cnf.d/mariadb-server.cnf
-	mysql_install_db --skip-test-db --verbose --user=mysql --ldata=/var/lib/mysql > /dev/null
+	mysql_install_db --skip-test-db --user=mysql --ldata=/var/lib/mysql > /dev/null
 
 	mysqld --user=mysql --bootstrap << EOF
 USE mysql ;
