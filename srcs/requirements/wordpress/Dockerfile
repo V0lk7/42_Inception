@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM 	alpine:3.17
 
 COPY	--chmod=777 tools/configure.sh /
 COPY	--chmod=777 conf/www.conf /
@@ -8,8 +8,10 @@ RUN	apk update && apk upgrade; \
 	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar; \
 	chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp; \
 	adduser -S "nginx" && addgroup -S "nginx"; \
-	chown -R nginx:nginx /var/www  && chmod -R 777 /var/www ; \
 	mkdir -p /var/www ; \
-	rm -rf /etc/php81/php-fpm.d/www.conf && mv /www.conf /etc/php81/php-fpm.d/ ;
+	chown -R nginx:nginx /var/www  && chmod -R 777 /var/www ; \
+	mv /www.conf /etc/php81/php-fpm.d/ ;
 
-CMD	["sh", "./configure.sh"]
+WORKDIR /var/www/
+
+CMD	["sh", "/configure.sh"]

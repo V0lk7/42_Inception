@@ -20,14 +20,14 @@ run: envfile
 	@mkdir -p /home/jduval/data/wordpress
 	@mkdir -p /home/jduval/data/mariadb
 	@echo "$(GREEN)Building containers ... $(RESET)"
-	@docker compose -f $(COMPOSE_FILE) up --build
+	docker compose -f $(COMPOSE_FILE) up --build
 
 up: envfile
 	@echo "$(GREEN)Building files for volumes ... $(RESET)"
 	@mkdir -p /home/jduval/data/wordpress
 	@mkdir -p /home/jduval/data/mariadb
 	@echo "$(GREEN)Building containers in background ... $(RESET)"
-	@docker compose -f $(COMPOSE_FILE) up -d --build
+	docker compose -f $(COMPOSE_FILE) up -d --build
 
 log:
 	docker logs nginx
@@ -49,21 +49,19 @@ start:
 	@-docker compose -f $(COMPOSE_FILE) start
 erase:
 	@echo "$(RED)Stopping containers ... $(RESET)"
-	@docker compose -f $(COMPOSE_FILE) down
+	docker compose -f $(COMPOSE_FILE) down
 	@echo "$(RED)Deleting all images ... $(RESET)"
-	@-docker rmi -f `docker images -qa`
+	-docker rmi -f `docker images -qa`
 	@echo "$(RED)Deleting all volumes ... $(RESET)"
-	@-docker volume rm `docker volume ls -q`
+	-docker volume rm `docker volume ls -q`
 
 clean: 	
 	@echo "$(RED)Stopping containers ... $(RESET)"
-	@docker compose -f $(COMPOSE_FILE) down
-#	@-docker stop `docker ps -qa`
-#	@-docker rm `docker ps -qa`
+	docker compose -f $(COMPOSE_FILE) down
 	@echo "$(RED)Deleting all images ... $(RESET)"
-	@-docker rmi -f `docker images -qa`
+	-docker rmi -f `docker images -qa`
 	@echo "$(RED)Deleting all volumes ... $(RESET)"
-	@-docker volume rm `docker volume ls -q`
+	-docker volume rm `docker volume ls -q`
 	@echo "$(RED)Deleting all data ... $(RESET)"
 	@sudo rm -rf /home/jduval/data/wordpress
 	@sudo rm -rf /home/jduval/data/mariadb

@@ -1,21 +1,24 @@
 #!bin/sh
 
-sleep 5
+Create_config(){
+	wp config create --dbname="$DATABASE_NAME" \
+			 --dbuser="$WPADMIN_USERNAME" \
+			 --dbpass="$WPADMIN_PASSWORD" \
+			 --dbhost="mariadb" \
+			 --skip-check
 
-cd var/www
+	wp core install --url="$URL" \
+			--title="$TITLE" \
+			--admin_user="$WPADMIN_USERNAME" \
+			--admin_password="$WPADMIN_PASSWORD" \
+			--admin_email="Aled@student.42DuPerou.fr" \
+			--skip-email
 
-wp core download
-wp config create --dbname="$DATABASE_NAME" \
-		 --dbuser="$WPADMIN_USERNAME" \
-		 --dbpass="$WPADMIN_PASSWORD" \
-		 --dbhost="mariadb" \
-		 --skip-check
+	wp user create	$WP_USERNAME $WP_USERNAME@aled.com --user_pass=$WP_PASSWORD --quiet
+}
 
-wp core install --url="$URL" \
-		--title="$TITLE" \
-		--admin_user="$WPADMIN_USERNAME" \
-		--admin_password="$WPADMIN_PASSWORD" \
-		--admin_email="jduval@student.42angouleme.fr" \
-		--skip-email
+[ ! -f "wp-activate.php" ] && wp core download
+
+[ ! -f "wp-config.php" ] && Create_config
 
 php-fpm81 -FR
