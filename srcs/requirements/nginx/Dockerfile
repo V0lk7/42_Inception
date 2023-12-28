@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.18
 
 COPY --chmod=655 tools/nginx-configure.sh /
 COPY --chmod=777 conf/nginx.conf /
