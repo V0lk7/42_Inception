@@ -6,16 +6,16 @@ Create_config(){
 			 --dbpass="$WPADMIN_PASSWORD" \
 			 --dbhost="mariadb" \
 			 --skip-check
-
 	wp core install --url="$URL" \
 			--title="$TITLE" \
 			--admin_user="$WPADMIN_USERNAME" \
 			--admin_password="$WPADMIN_PASSWORD" \
 			--admin_email="Aled@student.42DuPerou.fr" \
 			--skip-email
-
 	wp user create	$WP_USERNAME $WP_USERNAME@aled.com --user_pass=$WP_PASSWORD --quiet
 }
+
+cd /var/www/
 
 [ ! -f "wp-activate.php" ] && wp core download
 

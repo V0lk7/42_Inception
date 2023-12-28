@@ -12,6 +12,4 @@ RUN	apk update && apk upgrade; \
 	chown -R nginx:nginx /var/www  && chmod -R 777 /var/www ; \
 	mv /www.conf /etc/php81/php-fpm.d/ ;
 
-WORKDIR /var/www/
-
-CMD	["sh", "/configure.sh"]
+CMD	["sh", "./configure.sh"]

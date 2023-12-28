@@ -4,10 +4,10 @@ services:
   mariadb:
     container_name: mariadb
     build: requirements/mariadb
-    restart: on-failure
+    restart: always
     env_file: .env 
     networks:
-      - mynetwork
+      - Inception_network
     volumes:
       - mariadb:/var/lib/mysql
 
@@ -17,34 +17,31 @@ services:
     ports:
     - "443:443"
     networks:
-      - mynetwork
-    restart: on-failure
-    environment:
-      - USER_NGINX=nginx
-      - DOMAIN_NAME=jduval.42.fr
-      - CERT_SSL=jduval.42.fr.crt
-      - KEY_SSL=jduval.42.fr.key
+      - Inception_network
+    restart: always
     volumes:
       - wordpress:/var/www
 
   wordpress:
     container_name: wordpress
     build: requirements/wordpress
-    restart: on-failure
+    restart: always
     env_file: .env
     networks:
-      - mynetwork
+      - Inception_network
     volumes:
       - wordpress:/var/www
 
 volumes:
   wordpress:
+    name: "wordrpess"
     driver: local
     driver_opts:
       type: none
       device: "/home/jduval/data/wordpress"
       o: bind
   mariadb:
+    name: "mariadb"
     driver: local
     driver_opts:
       type: none
@@ -52,4 +49,5 @@ volumes:
       o: bind
 
 networks:
-  mynetwork:
+  Inception_network:
+    name: "Inception_network"

@@ -10,62 +10,62 @@ RESET		:= $(shell tput -Txterm sgr0)
 
 COMPOSE_FILE=./srcs/docker-compose.yml
 
-all: run
+all: up
 
 envfile:
-	cp ~/.env ./srcs/
+	@[ ! -e srcs/.env ] \
+	&& cp ~/.env ./srcs/ \
+	|| echo "$(GREEN)Envfile already in place. $(RESET)"
+.PHONY:envfile
 
-run: envfile 
-	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@mkdir -p /home/jduval/data/wordpress
-	@mkdir -p /home/jduval/data/mariadb
+build_data:
+	@echo "$(GREEN)Building directory for volumes ... $(RESET)"
+	@[ ! -e ~/data/wordpress ] && mkdir -p ~/data/wordpress \
+	|| echo "$(GREEN)Wordpress directory already in place. $(RESET)"
+	@[ ! -e ~/data/mariadb ] && mkdir -p ~/data/mariadb \
+	|| echo "$(GREEN)Mariadb directory already in place. $(RESET)"
+.PHONY:build_data
+
+up: envfile build_data 
 	@echo "$(GREEN)Building containers ... $(RESET)"
-	docker compose -f $(COMPOSE_FILE) up --build
-
-up: envfile
-	@echo "$(GREEN)Building files for volumes ... $(RESET)"
-	@mkdir -p /home/jduval/data/wordpress
-	@mkdir -p /home/jduval/data/mariadb
-	@echo "$(GREEN)Building containers in background ... $(RESET)"
 	docker compose -f $(COMPOSE_FILE) up -d --build
+.PHONY:up
 
 log:
+	@echo "$(GREEN)Nginx logs... $(RESET)"
 	docker logs nginx
+	@echo "$(GREEN)Mariadb logs... $(RESET)"
 	docker logs mariadb
+	@echo "$(GREEN)Wordpress logs... $(RESET)"
 	docker logs wordpress
+.PHONY:log
 
-list:	
-	@echo "$(PURPLE)Listing all containers ... $(RESET)"
-	 docker ps -a
-
-list_volumes:
-	@echo "$(PURPLE)Listing volumes ... $(RESET)"
-	docker volume ls
 stop:
 	@echo "$(RED)Stopping containers ... $(RESET)"
-	@-docker compose -f $(COMPOSE_FILE) kill
+	docker compose -f $(COMPOSE_FILE) stop
+.PHONY:stop
+
+kill:
+	@echo "$(RED)Stopping containers ... $(RESET)"
+	docker compose -f $(COMPOSE_FILE) kill
+.PHONY:kill
+
 start:
 	@echo "$(RED)Starting containers ... $(RESET)"
-	@-docker compose -f $(COMPOSE_FILE) start
-erase:
-	@echo "$(RED)Stopping containers ... $(RESET)"
-	docker compose -f $(COMPOSE_FILE) down
-	@echo "$(RED)Deleting all images ... $(RESET)"
-	-docker rmi -f `docker images -qa`
-	@echo "$(RED)Deleting all volumes ... $(RESET)"
-	-docker volume rm `docker volume ls -q`
+	docker compose -f $(COMPOSE_FILE) start
+.PHONY:start
 
-clean: 	
+erase:	envfile
 	@echo "$(RED)Stopping containers ... $(RESET)"
 	docker compose -f $(COMPOSE_FILE) down
 	@echo "$(RED)Deleting all images ... $(RESET)"
-	-docker rmi -f `docker images -qa`
-	@echo "$(RED)Deleting all volumes ... $(RESET)"
-	-docker volume rm `docker volume ls -q`
+	docker rmi -f `docker images -qa`
+.PHONY:erase
+
+clean: 	envfile erase
 	@echo "$(RED)Deleting all data ... $(RESET)"
-	@sudo rm -rf /home/jduval/data/wordpress
-	@sudo rm -rf /home/jduval/data/mariadb
-	@rm -rf srcs/.env
-	@echo "$(RED)Deleting all $(RESET)"
-
-.PHONY: envfile run up debug list list_volumes clean
+	docker volume rm `docker volume ls -q`
+	sudo rm -rf /home/jduval/data/wordpress
+	sudo rm -rf /home/jduval/data/mariadb
+	rm -rf srcs/.env
+.PHONY:clean
